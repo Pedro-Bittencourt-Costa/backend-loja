@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Amount } from "../value-objects/Amount";
 import { MonetaryValue } from "../value-objects/MonetaryValue";
 import { MonetaryValueTransformer } from "../value-objects/monetaryValueTransformer";
+import { OrderItem } from "./OrderItem";
 
 export interface ProductProps {
     id?: number;
@@ -17,7 +18,7 @@ export interface ProductProps {
 export class Product {
 
     @PrimaryGeneratedColumn()
-    public id!: number | null;
+    public id!: number;
 
     @Column()
     public photo!: string;
@@ -44,6 +45,9 @@ export class Product {
         transformer: new MonetaryValueTransformer()
     })
     public initialValue!: MonetaryValue;
+
+    @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
+    public orderItems!: OrderItem[];
 
     constructor(props?: ProductProps) {
         

@@ -1,6 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Cep } from "../value-objects/Cep";
 import { HouseNumber } from "../value-objects/HouseNumber";
+import { User } from "./User";
+import { Order } from "./Order";
 
 export interface AddressProps {
     id?: number;
@@ -35,6 +37,12 @@ export class Address {
 
     @Column({ type: 'text', nullable: true })
     public complement!: string | null;
+
+    @ManyToOne(() => User, (user) => user.addresses)
+    public user!: User;
+
+    @OneToMany(() => Order, (order) => order.address)
+    public orders!: Order[];
 
     constructor(props?: AddressProps) {
         

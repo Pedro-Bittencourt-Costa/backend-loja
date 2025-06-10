@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Order } from "./Order";
 
 @Entity('order_status')
 export class OrderStatus {
@@ -8,5 +9,8 @@ export class OrderStatus {
 
     @Column({unique: true})
     public description!: string;
+
+    @OneToMany(() => Order, (order) => order.status)
+    public orders!: Order[];
 
 }

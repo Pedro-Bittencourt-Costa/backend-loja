@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Order } from "./Order";
 
 @Entity('coupons')
 export class Coupon {
@@ -11,4 +12,7 @@ export class Coupon {
 
     @Column({unique: true})
     public description!: string;
+
+    @OneToMany(() => Order, (order) => order.coupon)
+    public orders!: Order[];
 }

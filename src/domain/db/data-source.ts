@@ -9,6 +9,7 @@ import { Order } from "../entities/Order"
 import { OrderItem } from "../entities/OrderItem"
 import { OrderStatus } from "../entities/OrderStatus"
 import { PaymentMethod } from "../entities/PaymentMethod"
+import { Permissions } from "../entities/Permissions"
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -27,7 +28,8 @@ export const AppDataSource = new DataSource({
         Order,
         OrderItem,
         OrderStatus,
-        PaymentMethod
+        PaymentMethod,
+        Permissions
     ],
     subscribers: [],
     migrations: [],
