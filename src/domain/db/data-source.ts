@@ -4,6 +4,11 @@ import 'dotenv/config'
 import { User } from "../entities/User"
 import { Product } from "../entities/Product"
 import { Address } from "../entities/Address"
+import { Coupon } from "../entities/Coupon"
+import { Order } from "../entities/Order"
+import { OrderItem } from "../entities/OrderItem"
+import { OrderStatus } from "../entities/OrderStatus"
+import { PaymentMethod } from "../entities/PaymentMethod"
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -17,7 +22,12 @@ export const AppDataSource = new DataSource({
     entities: [
         User,
         Product,
-        Address
+        Address,
+        Coupon,
+        Order,
+        OrderItem,
+        OrderStatus,
+        PaymentMethod
     ],
     subscribers: [],
     migrations: [],

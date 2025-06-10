@@ -13,37 +13,37 @@ export interface ProductProps {
     initialValue: MonetaryValue;
 }
 
-@Entity('product')
+@Entity('products')
 export class Product {
 
     @PrimaryGeneratedColumn()
-    id!: number | null;
+    public id!: number | null;
 
     @Column()
-    photo!: string;
+    public photo!: string;
 
     @Column()
-    name!: string;
+    public name!: string;
 
     @Column()
-    description!: string;
+    public description!: string;
 
     @Column(() => Amount, {prefix: false})
-    amount!: Amount;
+    public amount!: Amount;
 
     @Column({
         name: 'final_value',
         type: 'integer',
         transformer: new MonetaryValueTransformer()
     })
-    finalValue!: MonetaryValue;
+    public finalValue!: MonetaryValue;
 
     @Column({
         name: 'initial_value',
         type: 'integer',
         transformer: new MonetaryValueTransformer()
     })
-    initialValue!: MonetaryValue;
+    public initialValue!: MonetaryValue;
 
     constructor(props?: ProductProps) {
         

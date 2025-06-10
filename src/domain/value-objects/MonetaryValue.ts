@@ -1,8 +1,5 @@
-import { Column } from "typeorm";
-
 export class MonetaryValue {
 
-    @Column('integer')
     public readonly value: number;
 
     private constructor(value: number) {

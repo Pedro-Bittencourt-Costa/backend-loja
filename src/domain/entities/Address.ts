@@ -12,7 +12,7 @@ export interface AddressProps {
     complement: string | null;
 }
 
-@Entity('address')
+@Entity('addresses')
 export class Address {
 
     @PrimaryGeneratedColumn()
