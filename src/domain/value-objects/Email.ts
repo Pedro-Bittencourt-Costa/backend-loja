@@ -1,5 +1,9 @@
+import { Column } from "typeorm";
+
 export class Email {
-    private readonly value: string;
+
+    @Column({name: 'email', unique: true})
+    public readonly value: string;
 
     private constructor(email: string) {
         this.value = email;

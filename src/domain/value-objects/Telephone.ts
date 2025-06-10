@@ -1,5 +1,9 @@
+import { Column } from "typeorm";
+
 export class Telephone {
-    private readonly value: string;
+
+    @Column({name: 'telephone'})
+    public readonly value: string;
 
     private constructor(telephone: string) {
         this.value = telephone;

@@ -1,5 +1,9 @@
+import { Column } from "typeorm";
+
 export class Cpf {
-    private readonly value: string;
+
+    @Column({name: 'cpf', unique: true})
+    public readonly value: string;
 
     private constructor(cpf: string) {
         this.value = cpf;

@@ -1,7 +1,11 @@
+import { Column } from "typeorm";
 
 export class Name {
 
+    @Column({name: 'first_name'})
     private readonly first: string;
+
+    @Column({name: 'surname'})
     private readonly surname: string;
 
     constructor(first: string, surname: string) {

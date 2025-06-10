@@ -1,8 +1,10 @@
 import { compare, hash } from "bcrypt";
+import { Column } from "typeorm";
 
 export class HashedPassword {
 
-    private readonly value: string;
+    @Column({name: 'hashed_password'})
+    public readonly value: string;
 
     private constructor(hashedPassword: string){
         this.value = hashedPassword;

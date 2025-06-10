@@ -1,5 +1,8 @@
+import { Column } from "typeorm";
+
 export class Cep {
-    private readonly value: string;
+    @Column({name: 'cep'})
+    public readonly value: string;
 
     private constructor(cep: string) {
         this.value = cep;
