@@ -12,4 +12,4 @@ export class PaymentMethod {
 
     @OneToMany(() => Order, (order) => order.paymentMethod)
     public orders!: Order[];
-}
+} 
