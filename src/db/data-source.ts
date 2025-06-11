@@ -1,15 +1,15 @@
 
 import { DataSource } from "typeorm"
 import 'dotenv/config'
-import { User } from "../entities/User"
-import { Product } from "../entities/Product"
-import { Address } from "../entities/Address"
-import { Coupon } from "../entities/Coupon"
-import { Order } from "../entities/Order"
-import { OrderItem } from "../entities/OrderItem"
-import { OrderStatus } from "../entities/OrderStatus"
-import { PaymentMethod } from "../entities/PaymentMethod"
-import { Permissions } from "../entities/Permissions"
+import { User } from "../domain/entities/User"
+import { Product } from "../domain/entities/Product"
+import { Address } from "../domain/entities/Address"
+import { Coupon } from "../domain/entities/Coupon"
+import { Order } from "../domain/entities/Order"
+import { OrderItem } from "../domain/entities/OrderItem"
+import { OrderStatus } from "../domain/entities/OrderStatus"
+import { PaymentMethod } from "../domain/entities/PaymentMethod"
+import { Permissions } from "../domain/entities/Permissions"
 
 export const AppDataSource = new DataSource({
     type: "postgres",
