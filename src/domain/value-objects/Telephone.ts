@@ -2,7 +2,7 @@ import { Column } from "typeorm";
 
 export class Telephone {
 
-    @Column({name: 'telephone'})
+    @Column({name: 'telephone', unique: true})
     public readonly value: string;
 
     private constructor(telephone: string) {

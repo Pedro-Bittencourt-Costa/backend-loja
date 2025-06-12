@@ -3,10 +3,10 @@ import { Column } from "typeorm";
 export class Name {
 
     @Column({name: 'first_name'})
-    private readonly first: string;
+    public readonly first: string;
 
     @Column({name: 'surname'})
-    private readonly surname: string;
+    public readonly surname: string;
 
     constructor(first: string, surname: string) {
         this.validate(first, surname);
@@ -23,11 +23,12 @@ export class Name {
         }
     }
 
-    public getFirstName(): string {
-        return this.first;
-    }
+    public equals(other?: Name): boolean {
 
-    public getSurname(): string {
-        return this.surname;
+        if (!other) {
+            return false;
+        }
+
+        return this.first === other.first && this.surname === other.surname;
     }
 }

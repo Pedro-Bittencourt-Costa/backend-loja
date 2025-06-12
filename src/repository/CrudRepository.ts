@@ -1,6 +1,7 @@
 import { DeleteResult, FindManyOptions, FindOneOptions, ObjectLiteral, Repository, UpdateResult } from "typeorm";
+import { ICrudRepository } from "./ICrudRepository";
 
-export abstract class CrudRepository<T extends ObjectLiteral> {
+export abstract class CrudRepository<T extends ObjectLiteral> implements ICrudRepository<T> {
 
     repository: Repository<T>;
 
@@ -8,13 +9,13 @@ export abstract class CrudRepository<T extends ObjectLiteral> {
         this.repository = repository;
     }
 
-    async findAll(relations?: string[]): Promise<T[]> {
+    findAll(relations?: string[]): Promise<T[]> {
         const options: FindManyOptions<T> = {}
         options.relations = relations;
         return this.repository.find(options);
     }
 
-    async findById(id: number, relations?: string[]): Promise<T | null> {
+    findById(id: number, relations?: string[]): Promise<T | null> {
         const options: FindOneOptions<T> = {}
         options.relations = relations;
         return this.repository.findOne({
@@ -23,15 +24,16 @@ export abstract class CrudRepository<T extends ObjectLiteral> {
         });
     }
 
-    async create(entity: T): Promise<T> {
+    create(entity: T): Promise<T> {
         return this.repository.save(entity);
     }
 
-    async update(id: number, entity: Partial<T>): Promise<UpdateResult> {
+    update(id: number, entity: Partial<T>): Promise<UpdateResult> {
         return this.repository.update(id, entity);
     }
 
-    async delete(id: number): Promise<DeleteResult> {
+    delete(id: number): Promise<DeleteResult> {
         return this.repository.delete(id);
     }
+    
 }
