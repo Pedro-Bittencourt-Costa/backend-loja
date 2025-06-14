@@ -1,5 +1,5 @@
 
-export class AddressDto {
+export class CreateAddressDto {
     
     public id?: number;
     public cep!: string;
@@ -8,8 +8,9 @@ export class AddressDto {
     public number!: number;
     public reference?: string;
     public complement?: string;
+    public idUser!: number;
 
-    constructor(props?: AddressDto) {
+    constructor(props?: CreateAddressDto) {
         Object.assign(this, props);
     }
 }
