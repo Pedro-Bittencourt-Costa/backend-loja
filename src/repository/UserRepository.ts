@@ -13,7 +13,7 @@ export interface IUserRepository extends ICrudRepository<User> {
     findByTelephone(telephone: Telephone): Promise<User | null>;
 }
 
-export class UserRepository extends CrudRepository<User> {
+export class UserRepository extends CrudRepository<User> implements IUserRepository {
 
     constructor() {
         super(AppDataSource.getRepository(User));

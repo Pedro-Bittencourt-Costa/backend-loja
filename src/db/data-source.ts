@@ -10,6 +10,7 @@ import { OrderItem } from "../domain/entities/OrderItem"
 import { OrderStatus } from "../domain/entities/OrderStatus"
 import { PaymentMethod } from "../domain/entities/PaymentMethod"
 import { Permissions } from "../domain/entities/Permissions"
+import { Category } from "../domain/entities/Category"
 
 export const AppDataSource = new DataSource({
     type: "postgres",
@@ -29,7 +30,8 @@ export const AppDataSource = new DataSource({
         OrderItem,
         OrderStatus,
         PaymentMethod,
-        Permissions
+        Permissions,
+        Category
     ],
     subscribers: [],
     migrations: [],

@@ -1,8 +1,9 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Amount } from "../value-objects/Amount";
 import { MonetaryValue } from "../value-objects/MonetaryValue";
 import { MonetaryValueTransformer } from "../value-objects/monetaryValueTransformer";
 import { OrderItem } from "./OrderItem";
+import { Category } from "./Category";
 
 export interface ProductProps {
     id?: number;
@@ -48,6 +49,10 @@ export class Product {
 
     @OneToMany(() => OrderItem, (orderItem) => orderItem.product)
     public orderItems!: OrderItem[];
+
+    @ManyToOne(() => Category, (category) => category.products)
+    @JoinColumn({name: 'id_category'})
+    public category!: Category;
 
     constructor(props?: ProductProps) {
         
