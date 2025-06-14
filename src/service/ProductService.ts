@@ -24,7 +24,7 @@ export class ProductService implements IProductService {
         return this.productRepository.findAll(relations);
     }
 
-    async findById(id: number, relations?: string[]): Promise<Product | null> {
+    async findById(id: number, relations?: string[]): Promise<Product> {
         const productExist = await this.productRepository.findById(id, relations);
         if(!productExist) throw new Error('Product not found');
         return productExist;

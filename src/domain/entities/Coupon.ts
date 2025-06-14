@@ -13,6 +13,15 @@ export class Coupon {
     @Column({unique: true})
     public description!: string;
 
+    @Column({name: 'valid', default: true})
+    public isValid!: boolean
+
     @OneToMany(() => Order, (order) => order.coupon)
     public orders!: Order[];
+
+    constructor(props?: Coupon) {
+        if(props) {
+            Object.assign(this, props);
+        }
+    }
 }
