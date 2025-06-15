@@ -8,6 +8,7 @@ import { categoryRouter } from "./routes/categoryController";
 import { orderRouter } from "./routes/orderRoutes";
 import { couponRouter } from "./routes/couponRoutes";
 import ErrorHandler from "./middleware/ErrorHandle";
+import { loginRouter } from "./routes/loginRoutes";
 
 const app = express();
 
@@ -25,6 +26,7 @@ AppDataSource.initialize()
         app.use('/categories', categoryRouter);
         app.use('/orders', orderRouter);
         app.use('/coupons', couponRouter);
+        app.use('/login', loginRouter);
 
         app.use(ErrorHandler.handle())
 
