@@ -1,4 +1,8 @@
+import { IsString, IsNotEmpty } from 'class-validator';
 
 export class CreateCategoryDto {
-    public description!: string;
+  
+  @IsString({ message: 'Description must be a string' })
+  @IsNotEmpty({ message: 'Description is required' })
+  public description!: string;
 }
