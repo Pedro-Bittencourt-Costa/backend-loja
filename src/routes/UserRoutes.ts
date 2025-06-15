@@ -1,19 +1,27 @@
 import { Router } from "express";
+import { validateDto } from "../middleware/validateDtos";
+import { UserService } from "../service/UserService";
+import { UserController } from "../controller/UserController";
+import { UserRepository } from "../repository/UserRepository";
+import { PermissionRepository } from "../repository/PermissionRepository";
+import { CreateUserDto } from "../domain/dto/CreateUserDto";
+import { asyncWrapper } from "../middleware/asyncWrapper";
+import { authorizePermissions } from "../auth/authorizePermissions";
+import { authenticateJWT } from "../middleware/middlewareValidarJWT";
+import { PermissionsEnum as Permi } from "../domain/enums/PermissionsEnum";
 
 
-const faculdadeRouter = Router();
-const faculdadeService = new FaculdadeService();
-const faculdadeController = new FaculdadeController(faculdadeService);
-
-// Rotas personalizadas
-faculdadeRouter.get('/descricao/:descricao', authorizeRoles(Role.PRO_REITOR, Role.ALUNO, Role.PROFESSOR, Role.PARECERISTA, Role.DIRETOR) as any, authenticateJWT, asyncWrapper(faculdadeController.findByDescricao.bind(faculdadeController)));
+const userRouter = Router();
+const userService = new UserService(
+    new UserRepository(),
+    new PermissionRepository()
+);
+const userController = new UserController(userService);
 
 // Rotas padrão do CRUD
-faculdadeRouter.get('/', authenticateJWT, authorizeRoles(Role.PRO_REITOR, Role.ALUNO, Role.PROFESSOR, Role.PARECERISTA, Role.DIRETOR) as any, asyncWrapper(faculdadeController.findAll.bind(faculdadeController)));
-faculdadeRouter.get('/:id', authenticateJWT, authorizeRoles(Role.PRO_REITOR, Role.ALUNO, Role.PROFESSOR, Role.PARECERISTA, Role.DIRETOR) as any, asyncWrapper(faculdadeController.findById.bind(faculdadeController)));
-faculdadeRouter.post('/', authenticateJWT, authorizeRoles(Role.PRO_REITOR) as any,  validateDto(FaculdadeCreateDto), asyncWrapper(faculdadeController.create.bind(faculdadeController)));
-faculdadeRouter.put('/:id', authenticateJWT, authorizeRoles(Role.PRO_REITOR) as any, validateDto(FaculdadeUpdateDto), asyncWrapper(faculdadeController.update.bind(faculdadeController)));
+userRouter.get('/', authenticateJWT, authorizePermissions(Permi.ADMIN) as any, asyncWrapper(userController.findAll.bind(userController)));
+userRouter.get('/:id', authenticateJWT, authorizePermissions(Permi.ADMIN, Permi.CUSTOMER) as any, asyncWrapper(userController.findById.bind(userController)));
+userRouter.post('/',  validateDto(CreateUserDto), asyncWrapper(userController.create.bind(userController)));
+userRouter.put('/:id', authenticateJWT, authorizePermissions(Permi.ADMIN, Permi.CUSTOMER) as any, validateDto(CreateUserDto), asyncWrapper(userController.update.bind(userController)));
 
-
-
-export { faculdadeRouter };
+export { userRouter };

@@ -9,15 +9,16 @@ import { HashedPassword } from "../domain/value-objects/HashedPassword";
 import { Name } from "../domain/value-objects/Name";
 import { Telephone } from "../domain/value-objects/Telephone";
 import { ICrudRepository } from "../repository/ICrudRepository";
+import { PermissionRepository } from "../repository/PermissionRepository";
 import { IUserRepository } from "../repository/UserRepository";
 import { ICrudService } from "./ICrudService";
 
 export class UserService implements ICrudService<User, ResponseUserDto, CreateUserDto, CreateUserDto> {
     
     protected readonly userRepository: IUserRepository;
-    protected readonly permissionRepository: ICrudRepository<Permissions>;
+    protected readonly permissionRepository: PermissionRepository;
 
-    constructor(userRepository: IUserRepository, permissionRepository: ICrudRepository<Permissions>){
+    constructor(userRepository: IUserRepository, permissionRepository: PermissionRepository){
         this.userRepository = userRepository;
         this.permissionRepository = permissionRepository;
     }
