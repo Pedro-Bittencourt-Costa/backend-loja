@@ -47,7 +47,9 @@ export class Order {
     @Column()
     public updateTime!: Date;
 
-    @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+    @OneToMany(() => OrderItem, (orderItem) => orderItem.order,{
+        cascade: ['insert', 'update']
+    })
     public orderItems!: OrderItem[];
 
     @ManyToOne(() => User, (user) => user.orders)

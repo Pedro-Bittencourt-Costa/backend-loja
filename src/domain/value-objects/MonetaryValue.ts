@@ -16,6 +16,18 @@ export class MonetaryValue {
         return new MonetaryValue(valueInCents);
     }
 
+    public add(other: MonetaryValue): MonetaryValue { 
+        return new MonetaryValue(this.value + other.value); 
+    }
+
+    public subtract(other: MonetaryValue): MonetaryValue { 
+        return new MonetaryValue(this.value - other.value); 
+    }
+
+    public multiply(factor: number): MonetaryValue { 
+        return new MonetaryValue(Math.round(this.value * factor)); 
+    }
+
     /**
      * Cria uma instância de MonetaryValue a partir de um valor já em centavos.
      * @param amount - O valor em centavos (inteiro).

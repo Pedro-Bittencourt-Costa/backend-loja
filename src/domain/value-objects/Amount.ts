@@ -16,9 +16,9 @@ export class Amount {
         }
     }
 
-    public updateValue(value: number): void {
-        this.validateValue(value);
-        this.value = value;
+    subtract(quantity: number): Amount {
+        if (this.value < quantity) throw new Error("Insufficient stock");
+        return new Amount(this.value - quantity);
     }
 
     public getValue(): number {

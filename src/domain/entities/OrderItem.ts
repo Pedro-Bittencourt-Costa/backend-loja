@@ -33,8 +33,8 @@ export class OrderItem {
     })
     public initialValue!: MonetaryValue;
 
-    @Column({ type: 'text', nullable: true })
-    public observation!: string | null;
+    @Column()
+    public quantity!: number;
 
     @ManyToOne(() => Product, (product) => product.orderItems)
     public product!: Product;
