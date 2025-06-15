@@ -1,5 +1,6 @@
 import { compare, hash } from "bcrypt";
 import { Column } from "typeorm";
+import { BadRequestError } from "../exception/BadRequestError";
 
 export class HashedPassword {
 
@@ -12,7 +13,7 @@ export class HashedPassword {
 
     public static async create(plainPassword: string): Promise<HashedPassword> {
         if (plainPassword.trim() === "") {
-            throw new Error("A senha não pode estar vazia."); 
+            throw new BadRequestError("A senha não pode estar vazia."); 
         }
         const hashedPassword = await hash(plainPassword, 10);
         return new HashedPassword(hashedPassword);

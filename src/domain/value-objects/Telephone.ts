@@ -1,4 +1,5 @@
 import { Column } from "typeorm";
+import { BadRequestError } from "../exception/BadRequestError";
 
 export class Telephone {
 
@@ -11,7 +12,7 @@ export class Telephone {
 
     public static create(telephone: string): Telephone {
         if (!this.validate(telephone)) {
-            throw new Error('Telefone inválido');
+            throw new BadRequestError('Telefone inválido');
         }
         // Retorna o telefone apenas com os números
         return new Telephone(telephone.replace(/\D/g, ''));

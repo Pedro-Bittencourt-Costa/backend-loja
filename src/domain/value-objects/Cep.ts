@@ -1,4 +1,5 @@
 import { Column } from "typeorm";
+import { BadRequestError } from "../exception/BadRequestError";
 
 export class Cep {
     @Column({name: 'cep'})
@@ -10,7 +11,7 @@ export class Cep {
 
     public static create(cep: string): Cep {
         if (!this.validate(cep)) {
-            throw new Error('CEP inválido');
+            throw new BadRequestError('CEP inválido');
         }
         return new Cep(cep.replace(/\D/g, ''));
     }

@@ -1,3 +1,4 @@
+import { FindOneOptions } from "typeorm";
 import { AppDataSource } from "../db/data-source";
 import { User } from "../domain/entities/User";
 import { Cpf } from "../domain/value-objects/Cpf";
@@ -25,9 +26,12 @@ export class UserRepository extends CrudRepository<User> implements IUserReposit
         });
     }
 
-    findByEmail(email: Email): Promise<User | null> {
+    findByEmail(email: Email, relations?: string[]): Promise<User | null> {
+        const options: FindOneOptions<User> = {};
+        options.relations = relations;
         return this.repository.findOne({
-            where: {email: email}
+            where: {email: email},
+            ...options
         });
     }
 

@@ -1,4 +1,5 @@
 import { Column } from "typeorm";
+import { BadRequestError } from "../exception/BadRequestError";
 
 export class Name {
 
@@ -16,10 +17,10 @@ export class Name {
 
     private validate(first: string, surname: string): void {
         if (!first || first.trim().length < 2) {
-            throw new Error('first inválido.');
+            throw new BadRequestError('first inválido.');
         }
         if (!surname || surname.trim().length < 2) {
-            throw new Error('surname inválido.');
+            throw new BadRequestError('surname inválido.');
         }
     }
 

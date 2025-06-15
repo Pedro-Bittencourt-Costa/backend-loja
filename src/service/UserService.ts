@@ -1,14 +1,14 @@
 import { CreateUserDto } from "../domain/dto/CreateUserDto";
 import { ResponseUserDto } from "../domain/dto/ResponseUserDto";
-import { Permissions } from "../domain/entities/Permissions";
 import { User } from "../domain/entities/User";
 import { PermissionsEnum } from "../domain/enums/PermissionsEnum";
+import { BadRequestError } from "../domain/exception/BadRequestError";
+import { NotFoundError } from "../domain/exception/NotFoundError";
 import { Cpf } from "../domain/value-objects/Cpf";
 import { Email } from "../domain/value-objects/Email";
 import { HashedPassword } from "../domain/value-objects/HashedPassword";
 import { Name } from "../domain/value-objects/Name";
 import { Telephone } from "../domain/value-objects/Telephone";
-import { ICrudRepository } from "../repository/ICrudRepository";
 import { PermissionRepository } from "../repository/PermissionRepository";
 import { IUserRepository } from "../repository/UserRepository";
 import { ICrudService } from "./ICrudService";
@@ -30,7 +30,7 @@ export class UserService implements ICrudService<User, ResponseUserDto, CreateUs
 
     async findById(id: number, relations?: string[]): Promise<ResponseUserDto> {
         const user = await this.userRepository.findById(id, relations);
-        if(!user) throw new Error('User not found');
+        if(!user) throw new NotFoundError('User not found');
         return new ResponseUserDto(user);
     }
 
@@ -47,11 +47,11 @@ export class UserService implements ICrudService<User, ResponseUserDto, CreateUs
         ]);
 
         const permission = await this.permissionRepository.findById(PermissionsEnum.CUSTOMER);
-        if(!permission) throw new Error('Permission not found');
+        if(!permission) throw new NotFoundError('Permission not found');
 
-        if(cpfExist) throw new Error('CPF is already being used');
-        if(emailExist) throw new Error('Email is already being used');
-        if(telephoneExist) throw new Error('Telephone is already being used');
+        if(cpfExist) throw new BadRequestError('CPF is already being used');
+        if(emailExist) throw new BadRequestError('Email is already being used');
+        if(telephoneExist) throw new BadRequestError('Telephone is already being used');
 
         const hashedPassword = await HashedPassword.create(data.password);
 
@@ -71,26 +71,26 @@ export class UserService implements ICrudService<User, ResponseUserDto, CreateUs
     async update(id: number, data: Partial<CreateUserDto>): Promise<void> {
        
         const userExist = await this.userRepository.findById(id);
-        if(!userExist) throw new Error('User not found');
+        if(!userExist) throw new NotFoundError('User not found');
 
         if(data.cpf && data.cpf != userExist.cpf.value) {
             const cpf = Cpf.create(data.cpf);
             const cpfExist = await this.userRepository.findByCpf(cpf);
-            if(cpfExist) throw new Error('CPF is already being used');
+            if(cpfExist) throw new BadRequestError('CPF is already being used');
             userExist.cpf = cpf;
         }
 
         if(data.email && data.email != userExist.email.value) {
             const email = Email.create(data.email);
             const emailExist = await this.userRepository.findByEmail(email);
-            if(emailExist) throw new Error('Email is already being used');
+            if(emailExist) throw new BadRequestError('Email is already being used');
             userExist.email = email;
         }
 
         if(data.telephone && data.telephone != userExist.telephone.value) {
             const telephone = Telephone.create(data.telephone);
             const telephoneExist = await this.userRepository.findByTelephone(telephone);
-            if(telephoneExist) throw new Error('Telephone is already being used');
+            if(telephoneExist) throw new BadRequestError('Telephone is already being used');
             userExist.telephone = telephone;
         }
 
@@ -106,7 +106,7 @@ export class UserService implements ICrudService<User, ResponseUserDto, CreateUs
         }
 
         if((await this.userRepository.update(id, userExist)).affected === 0){
-            throw new Error('error when updating user');
+            throw new BadRequestError('error when updating user');
         }
 
     }

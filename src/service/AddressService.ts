@@ -7,6 +7,8 @@ import { Address } from "../domain/entities/Address";
 import { ResponseUserDto } from "../domain/dto/ResponseUserDto";
 import { Cep } from "../domain/value-objects/Cep";
 import { HouseNumber } from "../domain/value-objects/HouseNumber";
+import { NotFoundError } from "../domain/exception/NotFoundError";
+import { BadRequestError } from "../domain/exception/BadRequestError";
 
 export interface IAddressService extends ICrudService<Address, ResponseAddressDto, CreateAddressDto, Partial<CreateAddressDto>>{
     
@@ -50,7 +52,7 @@ export class AddressService implements IAddressService {
     async findById(id: number): Promise<ResponseAddressDto> {
         const address = await this.addressRepository.findById(id, ['user']);
         if (!address) {
-            throw new Error('Address not found');
+            throw new NotFoundError('Address not found');
         }
         return this.toResponseDto(address);
     }
@@ -59,7 +61,7 @@ export class AddressService implements IAddressService {
     async create(data: CreateAddressDto): Promise<ResponseAddressDto> {
         const userExist = await this.userRepository.findById(data.idUser);
         if (!userExist) {
-            throw new Error('User not found');
+            throw new NotFoundError('User not found');
         }
 
         const address = new Address({
@@ -79,7 +81,7 @@ export class AddressService implements IAddressService {
 
     async update(id: number, data: Partial<CreateAddressDto>): Promise<void> {
         const addressExist = await this.addressRepository.findById(id);
-        if(!addressExist) throw new Error('Address not found');
+        if(!addressExist) throw new NotFoundError('Address not found');
 
         // Atualiza os campos primitivos e os Value Objects
         if (data.street) addressExist.street = data.street;
@@ -96,7 +98,7 @@ export class AddressService implements IAddressService {
 
         const result = await this.addressRepository.update(id, addressExist);
         if (result.affected === 0) {
-            throw new Error('Error when updating address');
+            throw new BadRequestError('Error when updating address');
         }
     }
 

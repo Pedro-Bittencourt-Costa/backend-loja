@@ -1,3 +1,5 @@
+import { BadRequestError } from "../exception/BadRequestError";
+
 export class MonetaryValue {
 
     public readonly value: number;
@@ -9,7 +11,7 @@ export class MonetaryValue {
 
     public static fromFloat(amount: number): MonetaryValue {
         if (typeof amount !== 'number' || isNaN(amount)) {
-            throw new Error('O valor fornecido deve ser um número.');
+            throw new BadRequestError('O valor fornecido deve ser um número.');
         }
         // Multiplica por 100 e arredonda para o inteiro mais próximo para obter os centavos
         const valueInCents = Math.round(amount * 100);
@@ -43,10 +45,10 @@ export class MonetaryValue {
      */
     private validateValue(value: number): void {
         if (!Number.isSafeInteger(value)) {
-            throw new Error('O valor fornecido não é um inteiro seguro.');
+            throw new BadRequestError('O valor fornecido não é um inteiro seguro.');
         }
         if (value < 0) {
-            throw new Error('O valor monetário não pode ser negativo.');
+            throw new BadRequestError('O valor monetário não pode ser negativo.');
         }
     }
 

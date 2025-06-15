@@ -3,6 +3,8 @@ import { ResponseOrderDto } from "../domain/dto/ResponseOrderDto";
 import { Coupon } from "../domain/entities/Coupon";
 import { Order } from "../domain/entities/Order";
 import { OrderItem } from "../domain/entities/OrderItem";
+import { BadRequestError } from "../domain/exception/BadRequestError";
+import { NotFoundError } from "../domain/exception/NotFoundError";
 import { MonetaryValue } from "../domain/value-objects/MonetaryValue";
 import { IAddressRepository } from "../repository/AddressReposiroy";
 import { ICouponRepository } from "../repository/CouponRepository";
@@ -14,7 +16,7 @@ import { IUserRepository } from "../repository/UserRepository";
 import { ICrudService } from "./ICrudService";
 
 export interface IOrderService extends ICrudService<Order, ResponseOrderDto, CreateOrderDto, CreateOrderDto>{
-
+    findAllByUser(userId: number): Promise<ResponseOrderDto[]>;
 }
 
 export class OrderService implements IOrderService {
@@ -29,31 +31,38 @@ export class OrderService implements IOrderService {
         private readonly orderStatusRepository: OrderStatusRepository,
     ) {}
     
-    findAll(relations?: string[]): Promise<ResponseOrderDto[]> {
-        throw new Error("Method not implemented.");
+    async findAll(relations?: string[]): Promise<ResponseOrderDto[]> {
+        const allOrder = await this.orderRepository.findAll(relations);
+        return allOrder.map(order => this.toResponseDto(order));
     }
+
     update(id: number, data: Partial<CreateOrderDto>): Promise<void> {
         throw new Error("Method not implemented.");
+    }
+
+    async findAllByUser(userId: number, relations?: string[]): Promise<ResponseOrderDto[]> {
+        const allOrder = await this.orderRepository.findAllByUser(userId, relations);
+        return allOrder.map(order => this.toResponseDto(order));
     }
 
     async create(data: CreateOrderDto): Promise<ResponseOrderDto> {
 
         if (!data.items || data.items.length === 0) {
-            throw new Error("Order must have at least one item.");
+            throw new BadRequestError("Order must have at least one item.");
         }
 
         // --- 1. Validação e busca de entidades relacionadas ---
         const user = await this.userRepository.findById(data.userId);
-        if (!user) throw new Error(`User with ID ${data.userId} not found.`);
+        if (!user) throw new NotFoundError(`User with ID ${data.userId} not found.`);
 
         const address = await this.addressRepository.findById(data.addressId);
-        if (!address || address.user.id !== user.id) throw new Error("Invalid address for this user.");
+        if (!address || address.user.id !== user.id) throw new BadRequestError("Invalid address for this user.");
 
         const paymentMethod = await this.paymentMethodRepository.findById(data.paymentMethodId);
-        if (!paymentMethod) throw new Error("Payment method not found.");
+        if (!paymentMethod) throw new NotFoundError("Payment method not found.");
 
         const initialStatus = await this.orderStatusRepository.findByDescription("Pendente");
-        if (!initialStatus) throw new Error("Initial order status 'Pendente' not configured.");
+        if (!initialStatus) throw new BadRequestError("Initial order status 'Pendente' not configured.");
 
         const orderItems: OrderItem[] = [];
         let initialTotalValue = MonetaryValue.fromFloat(0);
@@ -61,7 +70,7 @@ export class OrderService implements IOrderService {
         // --- 2. Processamento dos Itens do Pedido ---
         for (const itemDto of data.items) {
             const product = await this.productRepository.findById(itemDto.productId);
-            if (!product) throw new Error(`Product with ID ${itemDto.productId} not found.`);
+            if (!product) throw new NotFoundError(`Product with ID ${itemDto.productId} not found.`);
             
             product.amount = product.amount.subtract(itemDto.quantity); // Valida e subtrai o estoque
             await this.productRepository.update(product.id, { amount: product.amount });
@@ -82,8 +91,8 @@ export class OrderService implements IOrderService {
         let coupon: Coupon | null = null;
         if (data.couponDescription) {
             coupon = await this.couponRepository.findByDescription(data.couponDescription);
-            if (!coupon) throw new Error("Coupon not found.");
-            if (!coupon.isValid) throw new Error("Coupon is not valid.");
+            if (!coupon) throw new NotFoundError("Coupon not found.");
+            if (!coupon.isValid) throw new BadRequestError("Coupon is not valid.");
 
             const discountMultiplier = 1 - (coupon.percentage / 100);
             finalTotalValue = initialTotalValue.multiply(discountMultiplier);
@@ -110,18 +119,18 @@ export class OrderService implements IOrderService {
         return this.toResponseDto(savedOrder);
     }
 
-    async findById(id: number): Promise<ResponseOrderDto> {
+    async findById(id: number, relations?: string[]): Promise<ResponseOrderDto> {
         const order = await this.orderRepository.findById(id, ['orderItems', 'orderItems.product']);
-        if (!order) throw new Error('Order not found');
+        if (!order) throw new NotFoundError('Order not found');
         return this.toResponseDto(order);
     }
 
     async updateStatus(orderId: number, statusId: number): Promise<void> {
         const order = await this.orderRepository.findById(orderId);
-        if (!order) throw new Error("Order not found.");
+        if (!order) throw new NotFoundError("Order not found.");
 
         const newStatus = await this.orderStatusRepository.findById(statusId);
-        if (!newStatus) throw new Error("Order status not found.");
+        if (!newStatus) throw new NotFoundError("Order status not found.");
 
         order.status = newStatus;
         order.updateTime = new Date();

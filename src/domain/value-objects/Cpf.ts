@@ -1,4 +1,5 @@
 import { Column } from "typeorm";
+import { BadRequestError } from "../exception/BadRequestError";
 
 export class Cpf {
 
@@ -11,7 +12,7 @@ export class Cpf {
 
     public static create(cpf: string): Cpf {
         if (!this.validate(cpf)) {
-            throw new Error('CPF inválido');
+            throw new BadRequestError('CPF inválido');
         }
         // Retorna o CPF apenas com os números
         return new Cpf(cpf.replace(/\D/g, ''));

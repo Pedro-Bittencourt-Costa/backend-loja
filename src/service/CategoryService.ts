@@ -1,6 +1,8 @@
 import { CreateCategoryDto } from "../domain/dto/CreateCategoryDto";
 import { ResponseCategoryDto } from "../domain/dto/ResponseCategoryDto";
 import { Category } from "../domain/entities/Category";
+import { BadRequestError } from "../domain/exception/BadRequestError";
+import { NotFoundError } from "../domain/exception/NotFoundError";
 import { ICategoryRepository } from "../repository/CategoryRepository";
 import { ICrudService } from "./ICrudService";
 
@@ -18,7 +20,7 @@ export class CategoryService implements ICategoryService {
         // Regra de Negócio: Verifica se já existe uma categoria com a mesma descrição
         const existingCategory = await this.categoryRepository.findByDescription(data.description);
         if (existingCategory) {
-            throw new Error(`Category with description "${data.description}" already exists.`);
+            throw new BadRequestError(`Category with description "${data.description}" already exists.`);
         }
 
         const category = new Category();
@@ -35,7 +37,7 @@ export class CategoryService implements ICategoryService {
     async findById(id: number, relations?: string[]): Promise<Category> {
         const category = await this.categoryRepository.findById(id, relations);
         if (!category) {
-            throw new Error('Category not found');
+            throw new NotFoundError('Category not found');
         }
         return category;
     }
@@ -43,21 +45,21 @@ export class CategoryService implements ICategoryService {
     async update(id: number, data: Partial<CreateCategoryDto>): Promise<void> {
         const categoryToUpdate = await this.categoryRepository.findById(id);
         if (!categoryToUpdate) {
-            throw new Error('Category not found to update.');
+            throw new NotFoundError('Category not found to update.');
         }
 
         // Se a descrição estiver sendo alterada, verifica se a nova descrição já está em uso
         if (data.description && data.description !== categoryToUpdate.description) {
             const existingCategory = await this.categoryRepository.findByDescription(data.description);
             if (existingCategory && existingCategory.id !== id) {
-                throw new Error(`Another category with description "${data.description}" already exists.`);
+                throw new BadRequestError(`Another category with description "${data.description}" already exists.`);
             }
             categoryToUpdate.description = data.description;
         }
 
         const result = await this.categoryRepository.update(id, categoryToUpdate);
         if (result.affected === 0) {
-            throw new Error('Error when updating category.');
+            throw new BadRequestError('Error when updating category.');
         }
     }
 

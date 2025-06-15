@@ -1,4 +1,5 @@
 import { Column } from "typeorm";
+import { BadRequestError } from "../exception/BadRequestError";
 
 export class Amount {
 
@@ -12,12 +13,12 @@ export class Amount {
 
     private validateValue(value: number): void {
         if(value <= 0) {
-            throw new Error('Valor invalido, o valor deve ser positivo');
+            throw new BadRequestError('Valor invalido, o valor deve ser positivo');
         }
     }
 
     subtract(quantity: number): Amount {
-        if (this.value < quantity) throw new Error("Insufficient stock");
+        if (this.value < quantity) throw new BadRequestError("Insufficient stock");
         return new Amount(this.value - quantity);
     }
 

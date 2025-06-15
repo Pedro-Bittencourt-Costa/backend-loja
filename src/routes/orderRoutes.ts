@@ -28,6 +28,8 @@ const orderService = new OrderService(
 );
 const orderController = new OrderController(orderService);
 
+orderRouter.get('/user/:id', authenticateJWT, authorizePermissions(Permi.ADMIN, Permi.CUSTOMER) as any, asyncWrapper(orderController.findAllByUser.bind(orderController)));
+
 // Rotas padrão do CRUD
 orderRouter.get('/', authenticateJWT, authorizePermissions(Permi.ADMIN) as any, asyncWrapper(orderController.findAll.bind(orderController)));
 orderRouter.get('/:id', authenticateJWT, authorizePermissions(Permi.ADMIN, Permi.CUSTOMER) as any, asyncWrapper(orderController.findById.bind(orderController)));

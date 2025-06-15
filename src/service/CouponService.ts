@@ -1,6 +1,8 @@
 import { CreateCouponDto } from "../domain/dto/CreateCouponDto";
 import { UpdateCouponDto } from "../domain/dto/UpdateCouponDto";
 import { Coupon } from "../domain/entities/Coupon";
+import { BadRequestError } from "../domain/exception/BadRequestError";
+import { NotFoundError } from "../domain/exception/NotFoundError";
 import { ICouponRepository } from "../repository/CouponRepository";
 import { ICrudService } from "./ICrudService";
 
@@ -20,11 +22,11 @@ export class CouponService implements ICouponService {
      
         const existingCoupon = await this.couponRepository.findByDescription(data.description);
         if (existingCoupon) {
-            throw new Error(`Coupon with description "${data.description}" already exists.`);
+            throw new BadRequestError(`Coupon with description "${data.description}" already exists.`);
         }
         
         if(data.percentage <= 0 || data.percentage > 100){
-            throw new Error('Percentage must be between 1 and 100.');
+            throw new BadRequestError('Percentage must be between 1 and 100.');
         }
 
         const coupon = new Coupon();
@@ -42,7 +44,7 @@ export class CouponService implements ICouponService {
     async findById(id: number, relations?: string[]): Promise<Coupon> {
         const coupon = await this.couponRepository.findById(id, relations);
         if (!coupon) {
-            throw new Error('Coupon not found');
+            throw new NotFoundError('Coupon not found');
         }
         return coupon;
     }
@@ -50,14 +52,14 @@ export class CouponService implements ICouponService {
     async update(id: number, data: UpdateCouponDto): Promise<void> {
         const couponToUpdate = await this.couponRepository.findById(id);
         if (!couponToUpdate) {
-            throw new Error('Coupon not found to update.');
+            throw new NotFoundError('Coupon not found to update.');
         }
 
         // Regra de Negócio: Se a descrição for alterada, verifica se a nova já existe
         if (data.description && data.description !== couponToUpdate.description) {
             const existingCoupon = await this.couponRepository.findByDescription(data.description);
             if (existingCoupon && existingCoupon.id !== id) {
-                throw new Error(`Another coupon with description "${data.description}" already exists.`);
+                throw new BadRequestError(`Another coupon with description "${data.description}" already exists.`);
             }
             couponToUpdate.description = data.description;
         }
@@ -66,7 +68,7 @@ export class CouponService implements ICouponService {
 
         const result = await this.couponRepository.update(id, couponToUpdate);
         if (result.affected === 0) {
-            throw new Error('Error when updating coupon.');
+            throw new BadRequestError('Error when updating coupon.');
         }
     }
 
@@ -74,7 +76,7 @@ export class CouponService implements ICouponService {
     async invalidate(id: number): Promise<void> {
         const coupon = await this.couponRepository.findById(id);
         if (!coupon) {
-            throw new Error('Coupon not found to invalidate.');
+            throw new NotFoundError('Coupon not found to invalidate.');
         }
         await this.update(id, { isValid: false });
     }

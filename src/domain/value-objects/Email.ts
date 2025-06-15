@@ -1,4 +1,5 @@
 import { Column } from "typeorm";
+import { BadRequestError } from "../exception/BadRequestError";
 
 export class Email {
 
@@ -11,7 +12,7 @@ export class Email {
 
     public static create(email: string): Email {
         if (!this.validate(email)) {
-            throw new Error('Email inválido');
+            throw new BadRequestError('Email inválido');
         }
         return new Email(email);
     }

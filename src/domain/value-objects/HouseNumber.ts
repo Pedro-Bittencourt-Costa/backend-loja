@@ -1,4 +1,5 @@
 import { Column } from "typeorm";
+import { BadRequestError } from "../exception/BadRequestError";
 
 export class HouseNumber {
 
@@ -11,7 +12,7 @@ export class HouseNumber {
 
     public static create(num: number): HouseNumber {
         if (num <= 0) {
-            throw new Error('O número do endereço deve ser positivo.');
+            throw new BadRequestError('O número do endereço deve ser positivo.');
         }
         return new HouseNumber(num);
     }
