@@ -14,8 +14,8 @@ import { ICrudService } from "./ICrudService";
 
 export class UserService implements ICrudService<User, ResponseUserDto, CreateUserDto, CreateUserDto> {
     
-    private readonly userRepository: IUserRepository;
-    private readonly permissionRepository: ICrudRepository<Permissions>;
+    protected readonly userRepository: IUserRepository;
+    protected readonly permissionRepository: ICrudRepository<Permissions>;
 
     constructor(userRepository: IUserRepository, permissionRepository: ICrudRepository<Permissions>){
         this.userRepository = userRepository;

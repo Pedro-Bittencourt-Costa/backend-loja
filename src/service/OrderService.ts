@@ -1,5 +1,5 @@
 import { CreateOrderDto } from "../domain/dto/CreateOrderDto";
-import { ResponseOrderDto } from "../domain/dto/ResponseOrderDtos";
+import { ResponseOrderDto } from "../domain/dto/ResponseOrderDto";
 import { Coupon } from "../domain/entities/Coupon";
 import { Order } from "../domain/entities/Order";
 import { OrderItem } from "../domain/entities/OrderItem";
@@ -8,6 +8,7 @@ import { IAddressRepository } from "../repository/AddressReposiroy";
 import { ICouponRepository } from "../repository/CouponRepository";
 import { IOrderRepository } from "../repository/OrderRepository";
 import { OrderStatusRepository } from "../repository/OrderStatusRepository";
+import { PaymentMethodRepository } from "../repository/PaymentMethodRepository";
 import { IProductRepository } from "../repository/ProductRepository";
 import { IUserRepository } from "../repository/UserRepository";
 import { ICrudService } from "./ICrudService";
