@@ -53,7 +53,7 @@ export class ProductService implements IProductService {
 
     async update(id: number, data: Partial<CreateProductDto>): Promise<void> {
         
-        const productExist = await this.productRepository.findById(id, ['category ']);
+        const productExist = await this.productRepository.findById(id, ['category']);
         if(!productExist) throw new NotFoundError('Product not found');
 
         if (data.name) productExist.name = data.name;

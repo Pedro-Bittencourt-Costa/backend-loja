@@ -56,7 +56,8 @@ export class UserService implements ICrudService<User, ResponseUserDto, CreateUs
         const hashedPassword = await HashedPassword.create(data.password);
 
         const user = new User();
-        user.name = new Name(data.name.first, data.name.surname);
+        user.firstName = data.firstName;
+        user.surname = data.surname;
         user.cpf = cpf;
         user.email = email;
         user.telephone = telephone;
@@ -94,10 +95,15 @@ export class UserService implements ICrudService<User, ResponseUserDto, CreateUs
             userExist.telephone = telephone;
         }
 
-        if(data.name){
-            const name = new Name(data.name.first, data.name.surname);
-            if(!userExist.name.equals(name)){
-                userExist.name = name;
+        if(data.firstName){
+            if(userExist.firstName !== data.firstName){
+                userExist.firstName = data.firstName;
+            }
+        }
+
+        if(data.surname){
+            if(userExist.surname !== data.surname){
+                userExist.surname = data.surname;
             }
         }
 

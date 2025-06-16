@@ -8,9 +8,9 @@ import {
 
 export class CreateProductDto {
 
-  @IsInt({ message: 'ID must be an integer' })
-  @Min(1, { message: 'ID must be greater than 0' })
-  public id!: number;
+  // @IsInt({ message: 'ID must be an integer' })
+  // @Min(1, { message: 'ID must be greater than 0' })
+  // public id!: number;
 
   @IsString({ message: 'Photo must be a string (URL or path)' })
   @IsNotEmpty({ message: 'Photo is required' })

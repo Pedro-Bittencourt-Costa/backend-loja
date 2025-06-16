@@ -7,7 +7,7 @@ import { ICouponRepository } from "../repository/CouponRepository";
 import { ICrudService } from "./ICrudService";
 
 export interface ICouponService extends ICrudService<Coupon, Coupon, CreateCouponDto, UpdateCouponDto> {
-    invalidate(id: number): Promise<void>;
+  
 }
 
 export class CouponService implements ICouponService {
@@ -65,6 +65,7 @@ export class CouponService implements ICouponService {
         }
         
         if (data.percentage !== undefined) couponToUpdate.percentage = data.percentage;
+        if (data.isValid !== undefined) couponToUpdate.isValid = data.isValid;
 
         const result = await this.couponRepository.update(id, couponToUpdate);
         if (result.affected === 0) {
@@ -72,14 +73,6 @@ export class CouponService implements ICouponService {
         }
     }
 
-
-    async invalidate(id: number): Promise<void> {
-        const coupon = await this.couponRepository.findById(id);
-        if (!coupon) {
-            throw new NotFoundError('Coupon not found to invalidate.');
-        }
-        await this.update(id, { isValid: false });
-    }
 
     // async delete(id: number): Promise<void> {
     //     // Regra de Negócio: Impede a exclusão de cupons já utilizados.

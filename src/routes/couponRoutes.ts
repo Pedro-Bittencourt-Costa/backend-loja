@@ -8,6 +8,7 @@ import { CouponService } from "../service/CouponService";
 import { CouponRepository } from "../repository/CouponRepository";
 import { CouponController } from "../controller/CouponController";
 import { CreateCouponDto } from "../domain/dto/CreateCouponDto";
+import { UpdateCouponDto } from "../domain/dto/UpdateCouponDto";
 
 
 const couponRouter = Router();
@@ -20,6 +21,6 @@ const couponController = new CouponController(couponService);
 couponRouter.get('/', authenticateJWT, authorizePermissions(Permi.ADMIN) as any, asyncWrapper(couponController.findAll.bind(couponController)));
 couponRouter.get('/:id', authenticateJWT, authorizePermissions(Permi.ADMIN, Permi.CUSTOMER) as any, asyncWrapper(couponController.findById.bind(couponController)));
 couponRouter.post('/', authenticateJWT, authorizePermissions(Permi.ADMIN) as any, validateDto(CreateCouponDto), asyncWrapper(couponController.create.bind(couponController)));
-couponRouter.put('/:id', authenticateJWT, authorizePermissions(Permi.ADMIN) as any, validateDto(CreateCouponDto), asyncWrapper(couponController.update.bind(couponController)));
+couponRouter.put('/:id', authenticateJWT, authorizePermissions(Permi.ADMIN) as any, validateDto(UpdateCouponDto), asyncWrapper(couponController.update.bind(couponController)));
 
 export { couponRouter };

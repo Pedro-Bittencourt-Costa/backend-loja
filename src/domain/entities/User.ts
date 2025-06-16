@@ -1,5 +1,4 @@
 import { Cpf } from "../value-objects/Cpf";
-import { Name } from "../value-objects/Name";
 import { Email } from "../value-objects/Email";
 import { HashedPassword } from "../value-objects/HashedPassword";
 import { Telephone } from "../value-objects/Telephone";
@@ -11,7 +10,8 @@ import { Permissions } from "./Permissions";
 export interface UserProps {
     id?: number;
     cpf: Cpf;
-    name: Name;
+    firstName: string;
+    surname: string;
     email: Email;
     telephone: Telephone;
     hashedPassword: HashedPassword;
@@ -26,8 +26,11 @@ export class User {
     @Column(() => Cpf, {prefix: false})
     public cpf!: Cpf;
 
-    @Column(() => Name, {prefix: false})
-    public name!: Name;
+    @Column({name: 'first_name'})
+    public firstName!: string;
+
+    @Column({name: 'surname'})
+    public surname!: string;
 
     @Column(() => Email, {prefix: false})
     public email!: Email;

@@ -3,6 +3,7 @@ import { ResponseOrderDto } from "../domain/dto/ResponseOrderDto";
 import { Coupon } from "../domain/entities/Coupon";
 import { Order } from "../domain/entities/Order";
 import { OrderItem } from "../domain/entities/OrderItem";
+import { OrderStatusEnum } from "../domain/enums/OrderStatusEnum";
 import { BadRequestError } from "../domain/exception/BadRequestError";
 import { NotFoundError } from "../domain/exception/NotFoundError";
 import { MonetaryValue } from "../domain/value-objects/MonetaryValue";
@@ -55,14 +56,14 @@ export class OrderService implements IOrderService {
         const user = await this.userRepository.findById(data.userId);
         if (!user) throw new NotFoundError(`User with ID ${data.userId} not found.`);
 
-        const address = await this.addressRepository.findById(data.addressId);
+        const address = await this.addressRepository.findById(data.addressId, ['user']);
         if (!address || address.user.id !== user.id) throw new BadRequestError("Invalid address for this user.");
 
         const paymentMethod = await this.paymentMethodRepository.findById(data.paymentMethodId);
         if (!paymentMethod) throw new NotFoundError("Payment method not found.");
 
-        const initialStatus = await this.orderStatusRepository.findByDescription("Pendente");
-        if (!initialStatus) throw new BadRequestError("Initial order status 'Pendente' not configured.");
+        const initialStatus = await this.orderStatusRepository.findById(OrderStatusEnum.PENDING_PAYMENT);
+        if (!initialStatus) throw new BadRequestError("Initial order status 'Pending Payment' not configured.");
 
         const orderItems: OrderItem[] = [];
         let initialTotalValue = MonetaryValue.fromFloat(0);

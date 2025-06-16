@@ -4,15 +4,18 @@ import { BadRequestError } from "../exception/BadRequestError";
 export class Name {
 
     @Column({name: 'first_name'})
-    public readonly first: string;
+    public readonly first_name!: string;
 
     @Column({name: 'surname'})
-    public readonly surname: string;
+    public readonly surname!: string;
 
-    constructor(first: string, surname: string) {
-        this.validate(first, surname);
-        this.first = first;
-        this.surname = surname;
+    constructor(props?: Name) {
+        if(props) {
+            console.log(props.first_name, props.surname)
+            this.validate(props.first_name, props.surname);
+            this.first_name = props.first_name;
+            this.surname = props.surname;
+        }
     }
 
     private validate(first: string, surname: string): void {
@@ -30,6 +33,6 @@ export class Name {
             return false;
         }
 
-        return this.first === other.first && this.surname === other.surname;
+        return this.first_name === other.first_name && this.surname === other.surname;
     }
 }

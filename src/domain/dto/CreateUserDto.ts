@@ -22,9 +22,13 @@ export class CreateUserDto {
   @Matches(/^\d{11}$/, { message: 'CPF must contain exactly 11 digits' })
   cpf!: string;
 
-  @ValidateNested()
-  @Type(() => NameDto)
-  name!: NameDto;
+  @IsString({ message: 'First name must be a string' })
+  @IsNotEmpty({ message: 'First name is required' })
+  firstName!: string;
+
+  @IsString({ message: 'Surname must be a string' })
+  @IsNotEmpty({ message: 'Surname is required' })
+  surname!: string;
 
   @IsString({ message: 'Email must be a string' })
   @Matches(/^[^\s@]+@[^\s@]+\.[^\s@]+$/, {
