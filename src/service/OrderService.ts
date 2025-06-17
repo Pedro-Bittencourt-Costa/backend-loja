@@ -44,7 +44,7 @@ export class OrderService implements IOrderService {
     }
 
     async findAllByUser(userId: number, relations?: string[]): Promise<ResponseOrderDto[]> {
-        const allOrder = await this.orderRepository.findAllByUser(userId, relations);
+        const allOrder = await this.orderRepository.findAllByUser(userId, ['orderItems', 'orderItems.product']);
         return allOrder.map(order => this.toResponseDto(order));
     }
 
