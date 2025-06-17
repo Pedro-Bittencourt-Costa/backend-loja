@@ -34,6 +34,6 @@ orderRouter.get('/user/:id', authenticateJWT, authorizePermissions(Permi.ADMIN, 
 orderRouter.get('/', authenticateJWT, authorizePermissions(Permi.ADMIN) as any, asyncWrapper(orderController.findAll.bind(orderController)));
 orderRouter.get('/:id', authenticateJWT, authorizePermissions(Permi.ADMIN, Permi.CUSTOMER) as any, asyncWrapper(orderController.findById.bind(orderController)));
 orderRouter.post('/', authenticateJWT, authorizePermissions(Permi.ADMIN, Permi.CUSTOMER) as any, validateDto(CreateOrderDto), asyncWrapper(orderController.create.bind(orderController)));
-orderRouter.put('/:id', authenticateJWT, authorizePermissions(Permi.ADMIN) as any, validateDto(CreateOrderDto), asyncWrapper(orderController.update.bind(orderController)));
+// orderRouter.put('/:id', authenticateJWT, authorizePermissions(Permi.ADMIN) as any, validateDto(CreateOrderDto), asyncWrapper(orderController.update.bind(orderController)));
 
 export { orderRouter };

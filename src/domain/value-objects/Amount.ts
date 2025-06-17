@@ -12,7 +12,7 @@ export class Amount {
     }
 
     private validateValue(value: number): void {
-        if(value <= 0) {
+        if(value < 0) {
             throw new BadRequestError('Valor invalido, o valor deve ser positivo');
         }
     }

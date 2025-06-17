@@ -33,8 +33,10 @@ export class OrderService implements IOrderService {
     ) {}
     
     async findAll(relations?: string[]): Promise<ResponseOrderDto[]> {
-        const allOrder = await this.orderRepository.findAll(relations);
-        return allOrder.map(order => this.toResponseDto(order));
+        const allOrder = await this.orderRepository.findAll(['orderItems', 'orderItems.product']);
+        const dto = allOrder.map(order => this.toResponseDto(order));
+        console.log(dto);
+        return dto;
     }
 
     update(id: number, data: Partial<CreateOrderDto>): Promise<void> {
